@@ -1,255 +1,138 @@
-# ndotfiles
-
-Use this repository to customize your envrioment:
-
-- Vim / NeoVim with Vim-Plug
-- Zsh with Oh my zsh
-- Fish with fisher
-
-Use this to customize your bash profile, it comes with :
-
-- set of useful functions and aliases
-- set colorfull shell
-- git config and aliases
-
-Please feel free to install zsh with oh my zsh.
-
-Alternatively, you may want to setp fish instead of zsh and oh my zsh.
-
-For Vim/NeoVim users, you may customize you vimrc with :
-
-- set of plugins
-- set of functions
-- keys mappings
-- colorscheme
-
-You can also add environment specific variables in $HOME/.ndotfiles/bash/.bashrc_vars
-
-## Compatibility
-
-- Windows Git-Bash
-- Mac OS
-- Linux
-
-## Prerequisites
-
-- Homebrew
-
-Homebrew is very handy for MacOS and Linux, to installs the stuff you need in a simple way. It is a package manager for which makes installing lots of different software like Git, Ruby, and Node simpler. Homebrew lets you avoid possible security problems associated with using the sudo command to install software like Node.
-
-Installing Homebrew is straightforward as long as you understand the Mac Terminal.
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
-
-eval "$(/usr/local/bin/brew shellenv)"
-brew update
-```
-
-- Git
-
-You also gonna need git to clone or pull public repositories from github.
-
-```bash
-brew install \
-    git \
-    tig
-
-git config --global core.editor nano
-git config --global user.name 'fullname'
-git config --global user.email 'example@mail.com'
-```
+# Vim
 
 ## Setup
 
-To start with, this ndotfiles repository provides 4 parts :
-
-- bash setup
-- git setup
-- vim/neovim Setup
-- hyper configuration
-- utils files (few scripts not so useful for now)
+Run the below command to setup all vim config  :
 
 ```bash
-curl -L https://raw.githubusercontent.com/newlight77/ndotfiles/main/customize-bash.sh | bash
-curl -L https://raw.githubusercontent.com/newlight77/ndotfiles/main/customize-git.sh | bash
 curl -L https://raw.githubusercontent.com/newlight77/ndotfiles/main/customize-vim.sh | bash
-curl -L https://raw.githubusercontent.com/newlight77/ndotfiles/main/customize-hyper.sh | bash
-curl -L https://raw.githubusercontent.com/newlight77/ndotfiles/main/customize-util.sh | bash
 ```
 
-### Undo
+The following folders are created :
+
+```tree
+.vim/
+ ├── autoload/
+ ├── backup/
+ ├── colors/
+ └── plugged/
+
+.config/
+ ├── vim/
+ ├───── after/
+ ├──────── plugin/
+```
+
+### Undo (cleaning)
 
 ```bash
 rm -fr /tmp/ndotfiles
-rm -rf $HOME/.ndotfiles/bash
-rm -rf $HOME/.ndotfiles/git
 rm -rf $HOME/.ndotfiles/vim_config
-rm -rf $HOME/.ndotfiles/hyper
-rm -rf $HOME/.ndotfiles/util
 ```
 
-Then update (by removing ndotfiles related changes source) the .zprofile, .bashrc, .vimrc, .config/nvim/init.vim accordingly.
+Then update (by removing ndotfiles related changes source) the .zprofile, .bashrc, .vimrc accordingly.
 
-## Hyper
 
-Use Homebrew to download install hyper:
+### Vim
 
 ```bash
-brew update
-brew install hyper
-```
+brew remove vim
+brew cleanup
 
-## Zsh
+brew install vim
+brew install fzf
+brew install fd
+brew install ripgrep
+```
 
 ```bash
-brew install zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+vim
+:PlugInstall
+:UpdateRemotePlugins
+:q!
+:q!
 ```
 
-
-### iterm2 with Shell Integration
+### vim-autoload
 
 ```bash
-curl -L <https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh> | bash
-curl -L <https://iterm2.com/shell_integration/zsh> -o ~/.iterm2_shell_integration.zsh
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ```
 
-### Theme
+## Get healthy
 
-brew install romkatv/powerlevel10k/powerlevel10k
-echo 'source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme' >> ~/.zshrc
-
-### Plugins
+Open vim and enter the following:
 
 ```bash
-brew install zsh-completions
-
-echo "
-if type brew &>/dev/null; then
-    FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-
-    autoload -Uz compinit
-    compinit
-  fi
-" >> ~/.zprofile
-
-brew install zsh-syntax-highlighting
-echo 'source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >> ~/.zprofile
-
-brew install zsh-autosuggestions
-echo "source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zprofile
-
-brew install zsh-history-substring-search
-echo 'source /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh' >> ~/.zprofile
-
-brew install zsh-syntax-highlighting
-echo 'source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh' >> ~/.zprofile
-
-sed -i -e "/plugins=(git)/plugins=(alias-finder brew common-aliases copydir copyfile docker docker-compose dotenv encode64 extract git jira jsontools node npm npx osx urltools vi-mode vscode web-search z)/g" ~/.zshrc
+:checkhealth 
+:checkhealth telescope
 ```
 
-### Vim / NeoVim
 
-Please refer to ./vim/readme.md or ./nvim/readme.md.
+### You Complete Me (a vim plugin)
+
+For YouCompleteMe, you need to compile the package:
+
+```bash
+brew install cmake
+cd .vim/plugged/youcompleteme
+python3 ./install.py 
+```
+
+### CoC (a vim plugin)
+
+[Install CoC](https://github.com/neoclide/coc.nvim/wiki/Install-coc.nvim)
+[CoC extensions](https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions)
+
+for generic web-development consider `:CocInstall coc-tsserver coc-json coc-html coc-css`
+
+for the list of extensions : `:CocList extensions`
+
+### deoplete
+
+deoplete requires Neovim or Vim8 with if_python3. You can enable Python3 interface with pip:
+
+```bash
+pip3 install --user pynvim
+
+# deoplete needs pynvim ver.0.3.0+.
+pip3 install --user --upgrade pynvim
+```
+
+### Language Server Protocol (lsp)
+
+To use LSP, there are two parts involved. First, we need to install a language server for the language we use. Second, we need to use a plugin that acts as an LSP client that communicates with this server.
+
+There are quite a few LSP clients out there. Some of the most popular ones are:
+
+- coc.nvim
+- vim-lsp
+- LanguageClient-neovim
+- vim-lsc
+
+Neovim built-in LSP client (you need to install nvim-lspconfig for easier configuration)
+
+First, we need to install a language server for Python. pyls is good choice. First, install pyls:
+
+```bash
+pip install "python-language-server[all]"
+```
+
+#### lsp-config & nvim-lsp-installer
+
+`nvim-lsp-installer` allows you to manage LSP servers (servers are installed inside `:echo stdpath("data")` by default). It works in tandem with `lsp-config` by registering a hook that enhances the PATH environment variable, allowing neovim's LSP client to locate the server executable installed by `nvim-lsp-installer`.
+
+`nvim-lsp-installer` will only make sure that Neovim can find your installed servers, it does not set up any servers for you automatically. You will have to set up your servers yourself (for example via lspconfig).
 
 ### Vim Cheat Sheet
 
 [Vim Cheat Sheet](https://vim.rtorr.com/)
 
-## SSH
-
-## Git
-
-```bash
-Git
-brew install \
-    git \
-    tig
-
-git config --global core.editor nano
-git config --global user.name 'fullname'
-git config --global user.email 'example@mail.com'
-```
-
-## Github
-
-```bash
-echo '
-machine api.github.com
-login <user>
-password <token>
-' >> ~/.netrc
-```
-
-Github requires a personal access token, a gpg key, and a ssh key.
-
-Generate GPG Key:
-
-```bash
-gpg --gen-key
-#which will prompt you for name, email and secret.
-```
-
-Now encrypt it using the gpg key, where <EMAIL> is the address you used when creating the key
-
-```bash
-gpg -e -r <EMAIL> ~/.netrc
-```
-
-### Github enterprise
-
-If you want to access github entreprise on premiss, set this in vimrc :
-
-```bash
-let g:github_enterprise_urls = ['https://example.com']
-```
-
-### git credentials using git-credential-netrc (optional)
-
-Note : This step is already covered by customize-git.sh.
-
-You gonna need a credential helper to decrypt the .netrc file automatically by git:
-
-```bash
-echo "creating folder $HOME/.ndotfiles/util" 1>&2
-mkdir $HOME/.ndotfiles/util/
-
-echo "retrieve the git-credential-netrc from github"
-curl -o $HOME/.ndotfiles/util/git-credential-netrc https://raw.githubusercontent.com/git/git/master/contrib/credential/netrc/git-credential-netrc.perl
-chmod +x $HOME/.ndotfiles/util/git-credential-netrc
-
-echo "adding export GPG_TTY and add git-credential-netrc to PATH in $HOME/.zshrc" 1>&2
-echo '
-# ===================================================================
-# added by https://github.com/newlight77/ndotfiles
-export PATH=$HOME/.ndotfiles/util/:$PATH
-export GPG_TTY=$(tty)
-# ===================================================================
-' >> $HOME/.zshrc
-```
-
-At last, configure git to use credential helper
-
-```bash
-git config --global credential.helper "netrc -f ~/.netrc.gpg -v"
-# automatically sign commits
-git config --global commit.gpgsign true
-```
-
 ## Reference
-
-- [iterm2 shell-integration](https://iterm2.com/documentation-shell-integration.html)
-- [oh my zsh](https://ohmyz.sh/)
-- [bash-it](https://github.com/Bash-it/bash-it)
-- [How to Configure your macOs Terminal with Zsh like a Pro](https://www.freecodecamp.org/news/how-to-configure-your-macos-terminal-with-zsh-like-a-pro-c0ab3f3c1156/)
 
 - [neovim](https://neovim.io/)
 - [vimrc](https://github.com/amix/vimrc)
 - [vim awesome](https://vimawesome.com/)
 - [vimrc example](https://github.com/gerardbm/vimrc)
 - [How to set up Neovim 0.5 + Modern plugins (LSP, Treesitter, Fuzzy finder, etc)](https://blog.inkdrop.app/how-to-set-up-neovim-0-5-modern-plugins-lsp-treesitter-etc-542c3d9c9887)
-
-- [Hyper](https://hyper.is/#installation)
-- [Hyper awesome](https://github.com/bnb/awesome-hyper)
